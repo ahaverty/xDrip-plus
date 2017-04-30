@@ -18,6 +18,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -556,6 +557,146 @@ public class Home extends ActivityWithMenu {
                 builder.create().show();
 
             }
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        xdrip.checkForcedEnglish(xdrip.getAppContext());
+        super.onResume();
+        handleFlairColors();
+        checkEula();
+        set_is_follower();
+
+        // status line must only have current bwp/iob data
+        statusIOB="";
+        statusBWP="";
+        refreshStatusLine();
+
+        if(BgGraphBuilder.isXLargeTablet(getApplicationContext())) {
+            this.currentBgValueText.setTextSize(100);
+            this.notificationText.setTextSize(40);
+            this.extraStatusLineText.setTextSize(40);
+        }
+        else if(BgGraphBuilder.isLargeTablet(getApplicationContext())) {
+            this.currentBgValueText.setTextSize(70);
+            this.notificationText.setTextSize(34); // 35 too big 33 works
+            this.extraStatusLineText.setTextSize(35);
+        }
+
+        _broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context ctx, Intent intent) {
+                if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0) {
+                    updateCurrentBgInfo("time tick");
+                    updateHealthInfo("time_tick");
+                }
+            }
+        };
+        newDataReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context ctx, Intent intent) {
+                holdViewport.set(0, 0, 0, 0);
+                updateCurrentBgInfo("new data");
+                updateHealthInfo("new_data");
+            }
+        };
+
+
+        registerReceiver(_broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+        registerReceiver(newDataReceiver, new IntentFilter(Intents.ACTION_NEW_BG_ESTIMATE_NO_DATA));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(statusReceiver,
+                new IntentFilter(Intents.HOME_STATUS_ACTION));
+
+        holdViewport.set(0, 0, 0, 0);
+
+        if (invalidateMenu) {
+            invalidateOptionsMenu();
+            invalidateMenu = false;
+        }
+        activityVisible = true;
+        updateCurrentBgInfo("generic on resume");
+        updateHealthInfo("generic on resume");
+
+        if (!JoH.getWifiSleepPolicyNever()) {
+            if (JoH.ratelimit("policy-never", 3600)) {
+                if (getPreferencesLong("wifi_warning_never", 0) == 0) {
+                    if (!JoH.isMobileDataOrEthernetConnected()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("WiFi Sleep Policy Issue");
+                        builder.setMessage("Your WiFi is set to sleep when the phone screen is off.\n\nThis may cause problems if you don't have cellular data or have devices on your local network.\n\nWould you like to go to the settings page to set:\n\nAlways Keep WiFi on during Sleep?");
+
+                        builder.setNeutralButton("Maybe Later", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builder.setPositiveButton("YES, Do it", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                toast("Recommend that you change WiFi to always be on during sleep");
+                                startActivity(new Intent(Settings.ACTION_WIFI_IP_SETTINGS));
+
+                            }
+                        });
+
+                        builder.setNegativeButton("NO, Never", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                setPreferencesLong("wifi_warning_never", (long) JoH.ts());
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    }
+                }
+            }
+        }
+
+        if (NFCReaderX.useNFC()) {
+            NFCReaderX.doNFC(this);
+        } else {
+            NFCReaderX.disableNFC(this);
+        }
+
+        if (get_follower() || get_master()) {
+          GcmActivity.checkSync(this);
+        }
+
+        NightscoutUploader.launchDownloadRest();
+
+    }
+
+    @Override
+    public void onPause() {
+        activityVisible = false;
+        super.onPause();
+        NFCReaderX.stopNFC(this);
+        if (_broadcastReceiver != null) {
+            try {
+                unregisterReceiver(_broadcastReceiver);
+            } catch (IllegalArgumentException e) {
+                UserError.Log.e(TAG, "_broadcast_receiver not registered", e);
+            }
+        }
+        if (newDataReceiver != null) {
+            try {
+                unregisterReceiver(newDataReceiver);
+            } catch (IllegalArgumentException e) {
+                UserError.Log.e(TAG, "newDataReceiver not registered", e);
+            }
+        }
+
+        try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception unregistering broadcast receiver: "+ e);
         }
 
     }
@@ -1572,118 +1713,6 @@ public class Home extends ActivityWithMenu {
         }
     }
 
-    @Override
-    protected void onResume() {
-        xdrip.checkForcedEnglish(xdrip.getAppContext());
-        super.onResume();
-        handleFlairColors();
-        checkEula();
-        set_is_follower();
-
-        // status line must only have current bwp/iob data
-        statusIOB="";
-        statusBWP="";
-        refreshStatusLine();
-
-        if(BgGraphBuilder.isXLargeTablet(getApplicationContext())) {
-            this.currentBgValueText.setTextSize(100);
-            this.notificationText.setTextSize(40);
-            this.extraStatusLineText.setTextSize(40);
-        }
-        else if(BgGraphBuilder.isLargeTablet(getApplicationContext())) {
-            this.currentBgValueText.setTextSize(70);
-            this.notificationText.setTextSize(34); // 35 too big 33 works 
-            this.extraStatusLineText.setTextSize(35);
-        }
-        
-        _broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context ctx, Intent intent) {
-                if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0) {
-                    updateCurrentBgInfo("time tick");
-                    updateHealthInfo("time_tick");
-                }
-            }
-        };
-        newDataReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context ctx, Intent intent) {
-                holdViewport.set(0, 0, 0, 0);
-                updateCurrentBgInfo("new data");
-                updateHealthInfo("new_data");
-            }
-        };
-
-
-        registerReceiver(_broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
-        registerReceiver(newDataReceiver, new IntentFilter(Intents.ACTION_NEW_BG_ESTIMATE_NO_DATA));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(statusReceiver,
-                new IntentFilter(Intents.HOME_STATUS_ACTION));
-
-        holdViewport.set(0, 0, 0, 0);
-
-        if (invalidateMenu) {
-            invalidateOptionsMenu();
-            invalidateMenu = false;
-        }
-        activityVisible = true;
-        updateCurrentBgInfo("generic on resume");
-        updateHealthInfo("generic on resume");
-
-        if (!JoH.getWifiSleepPolicyNever()) {
-            if (JoH.ratelimit("policy-never", 3600)) {
-                if (getPreferencesLong("wifi_warning_never", 0) == 0) {
-                    if (!JoH.isMobileDataOrEthernetConnected()) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("WiFi Sleep Policy Issue");
-                        builder.setMessage("Your WiFi is set to sleep when the phone screen is off.\n\nThis may cause problems if you don't have cellular data or have devices on your local network.\n\nWould you like to go to the settings page to set:\n\nAlways Keep WiFi on during Sleep?");
-
-                        builder.setNeutralButton("Maybe Later", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        builder.setPositiveButton("YES, Do it", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                toast("Recommend that you change WiFi to always be on during sleep");
-                                startActivity(new Intent(Settings.ACTION_WIFI_IP_SETTINGS));
-
-                            }
-                        });
-
-                        builder.setNegativeButton("NO, Never", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                setPreferencesLong("wifi_warning_never", (long) JoH.ts());
-                            }
-                        });
-
-                        AlertDialog alert = builder.create();
-                        alert.show();
-
-                    }
-                }
-            }
-        }
-
-        if (NFCReaderX.useNFC()) {
-            NFCReaderX.doNFC(this);
-        } else {
-            NFCReaderX.disableNFC(this);
-        }
-
-        if (get_follower() || get_master()) {
-          GcmActivity.checkSync(this);
-        }
-
-        NightscoutUploader.launchDownloadRest();
-
-    }
-
     private void setupCharts() {
         bgGraphBuilder = new BgGraphBuilder(this);
         updateStuff = false;
@@ -1732,7 +1761,7 @@ public class Home extends ActivityWithMenu {
 
                 @Override
                 public int getOpacity() {
-                    return 0; // TODO Which pixel format should this be?
+                    return PixelFormat.UNKNOWN; // TODO Which pixel format should this be?
                 }
             };
             chart.setBackground(background);
@@ -1786,34 +1815,6 @@ public class Home extends ActivityWithMenu {
         } else {
             previewChart.setCurrentViewport(holdViewport);
         }
-    }
-
-    @Override
-    public void onPause() {
-        activityVisible = false;
-        super.onPause();
-        NFCReaderX.stopNFC(this);
-        if (_broadcastReceiver != null) {
-            try {
-                unregisterReceiver(_broadcastReceiver);
-            } catch (IllegalArgumentException e) {
-                UserError.Log.e(TAG, "_broadcast_receiver not registered", e);
-            }
-        }
-        if (newDataReceiver != null) {
-            try {
-                unregisterReceiver(newDataReceiver);
-            } catch (IllegalArgumentException e) {
-                UserError.Log.e(TAG, "newDataReceiver not registered", e);
-            }
-        }
-
-        try {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(statusReceiver);
-        } catch (Exception e) {
-            Log.e(TAG, "Exception unregistering broadcast receiver: "+ e);
-        }
-
     }
 
     private static void set_is_follower() {
@@ -2919,6 +2920,11 @@ public class Home extends ActivityWithMenu {
         return super.onKeyDown(keyCode,event);
     }
 
+    private void startAddTreatmentDialog() {
+        AddTreatment myDiag = new AddTreatment();
+        myDiag.show(getSupportFragmentManager(), "AddTreatmentDialog");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -2931,6 +2937,9 @@ public class Home extends ActivityWithMenu {
             case R.id.action_sync_watch_db:
                 startService(new Intent(this, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_RESET_DB));
                 break;
+            case R.id.action_add_treatment:
+                //TODO create fragment for adding a treatment
+                startAddTreatmentDialog();
         }
 
         if (item.getItemId() == R.id.action_export_database) {

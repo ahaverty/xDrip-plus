@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_add_treatment"
+        android:checkable="false"
+        android:enabled="true"
+        android:icon="@drawable/ic_add_circle_outline_white_24dp"
+        android:onClick="showHelpFromMenu"
+        android:orderInCategory="1"
+        android:showAsAction="never"
+        android:title="Add Treatment"
+        android:visible="true"
+        app:showAsAction="always" />
+
     <item android:id="@+id/showhelp"
         android:title="Show Help"
         android:checkable="false"

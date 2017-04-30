@@ -809,4 +809,7 @@
     <string name="repeat_sound">Repeat sound</string>
     <string name="enable_telemetry">Enable Telemetry</string>
     <string name="send_data_to_developers">Send data to developers about success rates of different devices</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
