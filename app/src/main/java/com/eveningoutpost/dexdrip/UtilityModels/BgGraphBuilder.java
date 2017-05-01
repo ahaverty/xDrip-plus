@@ -1489,11 +1489,16 @@ public class BgGraphBuilder {
                             if (evaluation[0] > Profile.minimum_carb_recommendation) {
                                 //PointValue iv = new PointValue((float) fuzzed_timestamp, (float) (10 * bgScale));
                                 //iv.setLabel("+Carbs: " + JoH.qs(evaluation[0], 0));
+
+                                recommendedCarbs = evaluation[0];
+
                                 bwp_update = "\u224F" + " Carbs: " + JoH.qs(evaluation[0], 0);
                                 //annotationValues.add(iv); // needs to be different value list so we can make annotation nicer
                             } else if (evaluation[1] > Profile.minimum_insulin_recommendation) {
                                 //PointValue iv = new PointValue((float) fuzzed_timestamp, (float) (11 * bgScale));
                                 //iv.setLabel("+Insulin: " + JoH.qs(evaluation[1], 1));
+
+                                recommendedInsulin = evaluation[1];
 
                                 bwp_update = "\u224F" + " Insulin: " + JoH.qs(evaluation[1], 1) + ((low_occurs_at > 0) ? (" " + "\u26A0") : ""); // warning symbol
                                 //annotationValues.add(iv); // needs to be different value list so we can make annotation nicer

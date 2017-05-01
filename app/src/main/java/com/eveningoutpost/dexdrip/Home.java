@@ -168,6 +168,7 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
     private BroadcastReceiver _broadcastReceiver;
     private BroadcastReceiver newDataReceiver;
     private BroadcastReceiver statusReceiver;
+    private BroadcastReceiver recommendationsReceiver;
     private LineChartView chart;
     private ImageButton btnSpeak;
     private ImageButton btnNote;
@@ -521,7 +522,12 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
                         refreshStatusLine();
                     }
                 }
+            }
+        };
 
+        recommendationsReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
                 /*
                  * Update the recommended carbs and insulin for the 'add treatment' view
                  */
@@ -628,6 +634,9 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
         LocalBroadcastManager.getInstance(this).registerReceiver(statusReceiver,
                 new IntentFilter(Intents.HOME_STATUS_ACTION));
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(recommendationsReceiver,
+                new IntentFilter(Intents.HOME_RECOMMENDATIONS_UPDATE_ACTION));
+
         holdViewport.set(0, 0, 0, 0);
 
         if (invalidateMenu) {
@@ -716,6 +725,13 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
         } catch (Exception e) {
             Log.e(TAG, "Exception unregistering broadcast receiver: " + e);
         }
+
+        try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(recommendationsReceiver);
+        } catch (Exception e) {
+            Log.e(TAG, "Exception unregistering broadcast receiver: " + e);
+        }
+
 
     }
 

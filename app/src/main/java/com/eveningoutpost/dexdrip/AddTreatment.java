@@ -28,6 +28,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 
 public class AddTreatment extends DialogFragment {
@@ -131,7 +132,7 @@ public class AddTreatment extends DialogFragment {
             mPresetInsulin = getArguments().getDouble(ARG_PRESET_INSULIN);
         }
 
-        mFormatter = new SimpleDateFormat("hh:mm", Locale.getDefault());
+        mFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
     }
 
 
@@ -213,16 +214,18 @@ public class AddTreatment extends DialogFragment {
     public void onInsulinSuggestionButtonClick() {
         String insulinValue = mPresetInsulin.toString();
         insulinEditTextView.setText(insulinValue);
-        insulinsuggestionButton.setVisibility(View.GONE);
-        carbsSuggestionButton.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.carbsSuggestionButton)
     public void onCarbsSuggestionButtonClick() {
         String carbsValue = mPresetCarbs.toString();
         carbsEditTextView.setText(carbsValue);
+    }
+
+    @OnTextChanged({R.id.bloodGlucoseEditText, R.id.insulinEditText, R.id.carbsEditText})
+    public void hideSuggestionButtons() {
+        insulinsuggestionButton.setVisibility(View.GONE);
         carbsSuggestionButton.setVisibility(View.GONE);
-        insulinsuggestionButton.setVisibility(View.GONE); //Hide the alternative button as
     }
 
     @OnClick(R.id.saveTreatmentButton)
