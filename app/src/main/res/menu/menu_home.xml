@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_add_treatment"
         android:checkable="false"
         android:enabled="true"
         android:icon="@drawable/ic_add_circle_outline_white_24dp"
-        android:onClick="showHelpFromMenu"
+        android:onClick="startAddTreatmentDialog"
         android:orderInCategory="1"
-        android:showAsAction="never"
-        android:title="Add Treatment"
+        android:title="@string/add_treatment"
         android:visible="true"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item android:id="@+id/showhelp"
         android:title="Show Help"
@@ -19,7 +18,7 @@
         android:orderInCategory="1"
         android:visible="false"
         android:onClick="showHelpFromMenu"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/showreminders"
         android:title="Reminders"
@@ -27,7 +26,7 @@
         android:orderInCategory="1"
         android:visible="false"
         android:onClick="showRemindersFromMenu"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/export_submenu"
         android:title="@string/export_submenu"
@@ -38,19 +37,19 @@
         android:title="@string/menu_export_database"
         android:checkable="false"
         android:orderInCategory="1"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/action_import_db"
         android:title="@string/menu_import_db"
         android:checkable="false"
         android:orderInCategory="1"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/action_export_csv_sidiary"
         android:title="@string/menu_export_csv_sidiary"
         android:checkable="false"
         android:orderInCategory="1"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/importsettings"
         android:title="Load / Save Settings on sdcard"
@@ -58,7 +57,7 @@
         android:onClick="settingsSDcardExport"
         android:visible="true"
         android:orderInCategory="1"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 </menu>
     </item>
     <item android:id="@+id/showmap"
@@ -67,7 +66,7 @@
         android:onClick="showMapFromMenu"
         android:visible="true"
         android:orderInCategory="1"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/parakeetsetup"
         android:title="@string/switch_parakeet_to_setup_mode"
@@ -75,23 +74,23 @@
         android:onClick="parakeetSetupMode"
         android:visible="true"
         android:orderInCategory="1"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_resend_last_bg"
         android:orderInCategory="100"
         android:title="@string/action_resend_to_watch"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_open_watch_settings"
         android:orderInCategory="100"
         android:title="@string/action_open_watch_setting"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_sync_watch_db"
         android:orderInCategory="100"
         android:title="@string/action_sync_watch_db"
-        android:showAsAction="never" />
+        app:showAsAction="never" />
 
 
     <item android:id="@+id/deleteAllBG"
@@ -100,7 +99,7 @@
         android:orderInCategory="1"
         android:onClick="deleteAllBG"
         android:visible="false"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/testFeature"
         android:title="Debugging test feature"
@@ -108,7 +107,7 @@
         android:orderInCategory="1"
         android:onClick="testFeature"
         android:visible="false"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/crowdtranslate"
         android:title="@string/crowd_sourced_translation"
@@ -116,7 +115,7 @@
         android:orderInCategory="1"
         android:onClick="crowdTranslate"
         android:visible="true"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/userEvents"
         android:title="@string/view_events_log"
@@ -124,7 +123,7 @@
         android:orderInCategory="1"
         android:onClick="viewEventLog"
         android:visible="true"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
 
     <item android:id="@+id/synctreatments"
@@ -132,7 +131,7 @@
         android:checkable="false"
         android:orderInCategory="1"
         android:visible="false"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/sharemyconfig"
         android:title="@string/share_config_via_qr_code"
@@ -140,7 +139,7 @@
         android:checkable="false"
         android:orderInCategory="1"
         android:onClick="shareMyConfig"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/sendbackfill"
         android:title="Send BG readings to backfill"
@@ -148,26 +147,26 @@
         android:orderInCategory="1"
         android:onClick="doBackFillBroadcast"
         android:visible="false"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/checkforupdate"
         android:title="@string/check_for_updated_version"
         android:checkable="false"
         android:orderInCategory="1"
         android:onClick="checkForUpdate"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/sendfeedback"
         android:title="@string/send_feedback_to_developer"
         android:checkable="false"
         android:orderInCategory="1"
         android:onClick="sendFeedback"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     <item android:id="@+id/action_toggle_speakreadings"
         android:title="@string/speak_readings"
         android:checkable="true"
         android:orderInCategory="2"
         android:visible="false"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 </menu>

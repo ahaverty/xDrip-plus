@@ -1,38 +1,32 @@
 package com.eveningoutpost.dexdrip;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.util.Date;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AddTreatment.OnAddTreatmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AddTreatment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddTreatment extends DialogFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    
     //TODO preset time, carbs and insulin
     private static final String ARG_PRESET_TIME = "paramPresetTime";
     private static final String ARG_PRESET_CARBS = "paramPresetCarbs";
     private static final String ARG_PRESET_INSULIN = "paramPresetInsulin";
 
-    // TODO: Rename and change types of parameters
     private Integer mPresetTime;
     private Double mPresetCarbs;
     private Double mPresetInsulin;
@@ -55,13 +49,6 @@ public class AddTreatment extends DialogFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AddTreatment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static AddTreatment newInstance(Integer presetTime, Double presetCarbs, Double presetInsulin) {
         AddTreatment fragment = new AddTreatment();
         Bundle args = new Bundle();
@@ -70,6 +57,16 @@ public class AddTreatment extends DialogFragment {
         args.putDouble(ARG_PRESET_INSULIN, presetInsulin);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_add_treatment, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
     }
 
     @Override
@@ -82,12 +79,6 @@ public class AddTreatment extends DialogFragment {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_treatment, container, false);
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -97,6 +88,22 @@ public class AddTreatment extends DialogFragment {
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnAddTreatmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Window window = getDialog().getWindow();
+        Point size = new Point();
+
+        if (window != null) {
+            Display display = window.getWindowManager().getDefaultDisplay();
+            display.getSize(size);
+            int width = size.x;
+
+            window.setLayout((int) (width * 0.90), WindowManager.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
         }
     }
 

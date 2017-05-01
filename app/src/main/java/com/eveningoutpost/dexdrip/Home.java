@@ -2745,6 +2745,11 @@ public class Home extends ActivityWithMenu {
         startActivity(new Intent(getApplicationContext(), Reminders.class));
     }
 
+    public void startAddTreatmentDialog(MenuItem item) {
+        AddTreatment addTreatmentDialog = AddTreatment.newInstance(null, null, null);
+        addTreatmentDialog.show(getSupportFragmentManager(), "AddTreatmentDialog");
+    }
+
 
     public void parakeetSetupMode(MenuItem myitem) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -2920,10 +2925,6 @@ public class Home extends ActivityWithMenu {
         return super.onKeyDown(keyCode,event);
     }
 
-    private void startAddTreatmentDialog() {
-        AddTreatment myDiag = new AddTreatment();
-        myDiag.show(getSupportFragmentManager(), "AddTreatmentDialog");
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
