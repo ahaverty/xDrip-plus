@@ -52,9 +52,12 @@ public class AddTreatment extends DialogFragment {
     public static AddTreatment newInstance(Integer presetTime, Double presetCarbs, Double presetInsulin) {
         AddTreatment fragment = new AddTreatment();
         Bundle args = new Bundle();
-        args.putInt(ARG_PRESET_TIME, presetTime);
-        args.putDouble(ARG_PRESET_CARBS, presetCarbs);
-        args.putDouble(ARG_PRESET_INSULIN, presetInsulin);
+        if(presetTime != null)
+            args.putInt(ARG_PRESET_TIME, presetTime);
+        if(presetCarbs != null)
+            args.putDouble(ARG_PRESET_CARBS, presetCarbs);
+        if(presetInsulin != null)
+            args.putDouble(ARG_PRESET_INSULIN, presetInsulin);
         fragment.setArguments(args);
         return fragment;
     }

@@ -134,7 +134,7 @@ import static com.eveningoutpost.dexdrip.calibrations.PluggableCalibration.getCa
 import static com.eveningoutpost.dexdrip.calibrations.PluggableCalibration.getCalibrationPluginFromPreferences;
 
 
-public class Home extends ActivityWithMenu {
+public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmentInteractionListener {
     private final static String TAG = "jamorham: " + Home.class.getSimpleName();
     private final static boolean d = true;
     public final static String START_SPEECH_RECOGNITION = "START_APP_SPEECH_RECOGNITION";
@@ -1646,6 +1646,12 @@ public class Home extends ActivityWithMenu {
         }
     }
 
+    @Override
+    public void onTreatmentSave(Date dateTime, Double bloodGlucose, Double carbs, Double insulin) {
+        //TODO
+        Toast.makeText(this, "Saved", Toast.LENGTH_LONG).show();
+    }
+
     class wordDataWrapper {
         public ArrayList<wordData> entries;
 
@@ -2938,9 +2944,6 @@ public class Home extends ActivityWithMenu {
             case R.id.action_sync_watch_db:
                 startService(new Intent(this, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_RESET_DB));
                 break;
-            case R.id.action_add_treatment:
-                //TODO create fragment for adding a treatment
-                startAddTreatmentDialog();
         }
 
         if (item.getItemId() == R.id.action_export_database) {
