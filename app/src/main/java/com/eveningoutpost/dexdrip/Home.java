@@ -2787,8 +2787,11 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
         startActivity(new Intent(getApplicationContext(), Reminders.class));
     }
 
+    @SuppressWarnings("UnnecessaryBoxing")
     public void startAddTreatmentDialog(MenuItem item) {
-        AddTreatment addTreatmentDialog = AddTreatment.newInstance(null, mRecommendedCarbs, mRecommendedInsulin);
+        Double roundedCarbs = Double.valueOf(Math.round(mRecommendedCarbs));
+        Double roundedInsulin = Double.valueOf((Math.round(mRecommendedInsulin * 10) / 10)); //Allow decimal place for insulin
+        AddTreatment addTreatmentDialog = AddTreatment.newInstance(null, roundedCarbs, roundedInsulin);
         addTreatmentDialog.show(getSupportFragmentManager(), "AddTreatmentDialog");
     }
 
