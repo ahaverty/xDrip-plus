@@ -191,6 +191,7 @@ dependencies {
     compile "com.google.android.gms:play-services-wearable:$playServicesVersion"
     compile "com.google.android.gms:play-services-location:$playServicesVersion"
     compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
+    compile 'com.wdullaer:materialdatetimepicker:3.2.0'
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.squareup.wire:wire-runtime:2.2.0'

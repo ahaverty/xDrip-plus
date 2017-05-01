@@ -36,5 +36,6 @@ public interface Intents {
 
     // Local Broadcasts
     String HOME_STATUS_ACTION = "com.eveningoutpost.dexdrip.HOME_STATUS_ACTION";
+    String HOME_RECOMMENDATIONS_UPDATE_ACTION = "com.eveningoutpost.dexdrip.HOME_RECOMMENDATIONS_UPDATE_ACTION";
 
 }

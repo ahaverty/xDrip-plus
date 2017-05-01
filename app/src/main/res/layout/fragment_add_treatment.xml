@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:context="com.eveningoutpost.dexdrip.AddTreatment">
 
     <TableLayout
@@ -11,7 +12,7 @@
         android:stretchColumns="1">
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
@@ -19,35 +20,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="Time" />
-
-            <EditText
-                android:id="@+id/timeEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="datetime" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+                android:text="Time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
-                android:id="@+id/bloodGlucosLabel"
+                android:id="@+id/timeValueLabel"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="30dp"
                 android:gravity="center_vertical"
-                android:text="Blood Glucose" />
-
-            <EditText
-                android:id="@+id/bloodGlucoseEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="- Units"
-                android:inputType="number" />
+                tools:text="12:17"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         </TableRow>
 
@@ -61,7 +43,8 @@
                 android:layout_height="match_parent"
 
                 android:gravity="center_vertical"
-                android:text="Carbs" />
+                android:text="Carbs"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,15 +57,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="- g"
-                    android:inputType="time" />
+                    android:hint=" - grams"
+                    android:imeOptions="actionNext"
+                    android:inputType="number" />
 
                 <Button
-                    android:id="@+id/button14"
+                    android:id="@+id/carbsSuggestionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:text="Button"
+                    android:drawableLeft="@drawable/ic_arrow_back_white_24dp"
                     tools:text="35" />
             </LinearLayout>
 
@@ -98,7 +82,8 @@
                 android:layout_height="match_parent"
 
                 android:gravity="center_vertical"
-                android:text="Insulin" />
+                android:text="Insulin"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -111,16 +96,44 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="- Units"
-                    android:inputType="time" />
+                    android:hint=" - Units"
+                    android:imeOptions="actionNext"
+                    android:inputType="number|numberDecimal" />
 
                 <Button
                     android:id="@+id/insulinSuggestionButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_arrow_back_white_24dp"
                     tools:text="12" />
             </LinearLayout>
+
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/bloodGlucosLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingRight="5dp"
+                android:text="Blood Glucose"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <EditText
+                android:id="@+id/bloodGlucoseEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint=" - Units"
+                android:imeOptions="actionDone"
+                android:imeActionLabel="Save"
+                android:inputType="number|numberDecimal" />
 
         </TableRow>
 
