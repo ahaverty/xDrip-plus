@@ -4,11 +4,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.23.0'
     }
 }
 apply plugin: 'com.android.application'
-//apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
@@ -22,12 +21,6 @@ repositories {
     flatDir {
         dirs 'libs'
     }
-}
-
-def generateVersionNumber = { ->
-    StringBuilder stringBuilder = new StringBuilder();
-    stringBuilder.append((new Date()).format('yyMMddHHmm'))
-    return Integer.parseInt(stringBuilder.toString());
 }
 
 def generateVersionNumberString = { ->
@@ -52,8 +45,6 @@ def generateVersionName = { ->
                 commandLine 'git', 'describe', '--tags'
                 standardOutput = stdout
             }
-            //stringBuilder.append(stdout.toString().trim())
-            //stringBuilder.append("-")
         } catch (ignored) {
             // no tags
         }
@@ -74,7 +65,7 @@ def generateVersionName = { ->
             standardOutput = stdout
         }
         String branch = stdout.toString().trim()
-        if (!branch.equals("master")) {
+        if (branch != "master") {
             stringBuilder.append('-')
             stringBuilder.append(branch)
         }
@@ -85,19 +76,16 @@ def generateVersionName = { ->
     stringBuilder.append('-')
     stringBuilder.append((new Date()).format('yyyy.MM.dd'))
     return stringBuilder.toString()
-
 }
-
-
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         applicationId "com.eveningoutpost.dexdrip"
         minSdkVersion 17
-        targetSdkVersion 23
+        targetSdkVersion 25
         // change versionCode only when downgrade should be prevented
         // eg, when data structures are incompatible
         versionCode 1603091400
@@ -157,30 +145,17 @@ task AutoTestRig() << {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     wearApp project(':wear')
-    //weapApp files('../wear/build/outputs/apk/wear_release.apk')
-    //testCompile 'com.squareup.okhttp:mockwebserver:2.5.0'
     compile('com.github.nightscout:android-uploader:CORE_FOR_XDRIP') {
         transitive = false;
     }
-
     compile project(':localeapi')
-    //compile 'com.nispok:snackbar:2.10.8'
-    //compile 'com.google.android.gms:play-services-drive:9.4.0'
-    //compile 'com.jakewharton.retrofit:retrofit1-okhttp3-client:1.1.0'
-    //compile 'org.influxdb:influxdb-java:2.6'
-    //compile 'com.embarkmobile:zxing-android-legacy:2.0.0@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
-    // compile 'com.itextpdf:itextg:5.5.9'
-
-    // Pebble-Trend, needs to be checked if really needed
-    //compile 'com.android.support:multidex:1.0.1'
-    // compile 'com.rarepebble:colorpicker:1.7.0'
     compile(name: 'colorpicker', ext: 'aar')
 
     def supportVersion = '25.3.1'
-    def playServicesVersion = '10.2.1'
+    def playServicesVersion = '11.0.2'
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-v13:$supportVersion"
@@ -192,8 +167,8 @@ dependencies {
     compile "com.google.android.gms:play-services-location:$playServicesVersion"
     compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
     compile 'com.wdullaer:materialdatetimepicker:3.2.0'
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'com.squareup.wire:wire-runtime:2.2.0'
     compile 'com.squareup.okhttp:okhttp:2.7.5'
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
@@ -218,7 +193,7 @@ dependencies {
     compile 'uk.com.robust-it:cloning:1.9.2'
     compile 'com.github.amlcurran.showcaseview:library:5.4.3'
     compile 'ar.com.hjg:pngj:2.1.0'
-    compile 'com.bugfender.sdk:android:0.+'
+    compile 'com.bugfender.sdk:android:0.7.7'
     compile "com.android.support:support-v4:$supportVersion"
 }
 
