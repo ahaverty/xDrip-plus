@@ -1,23 +1,21 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.23.0'
-    }
-}
+apply plugin: 'maven'
 apply plugin: 'com.android.application'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
+    jcenter()
+    mavenCentral()
+    maven {
+        url 'https://maven.fabric.io/public'
+    }
     maven {
         url "https://raw.github.com/embarkmobile/zxing-android-minimal/mvn-repo/maven-repository/"
     }
     maven {
         url "https://jitpack.io"
     }
-    maven { url "https://oss.sonatype.org/content/groups/public/" }
+    maven {
+        url "https://oss.sonatype.org/content/groups/public/"
+    }
     flatDir {
         dirs 'libs'
     }
@@ -79,9 +77,17 @@ def generateVersionName = { ->
 }
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'release'
+            keyPassword 'anBa16?wo0fid'
+            storeFile file('/Users/alan/StudioProjects/xDrip-plus/personal-signing.jks')
+            storePassword 'anBa16?wo0fid'
+        }
+
+    }
     compileSdkVersion 25
     buildToolsVersion '25.0.3'
-
     defaultConfig {
         applicationId "com.eveningoutpost.dexdrip"
         minSdkVersion 17
@@ -93,22 +99,20 @@ android {
         buildConfigField "int", "buildVersion", generateVersionNumberString()
         vectorDrawables.useSupportLibrary = true
     }
-
     lintOptions {
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
     }
-
     packagingOptions {
         exclude 'META-INF/INDEX.LIST'
     }
-
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled true
@@ -123,25 +127,6 @@ android {
     }
 }
 
-// auto test rig
-task AutoInstall(type: Exec) {
-    commandLine "bash", "$projectDir/autoinstallviausb"
-}
-
-// auto tester
-tasks.whenTaskAdded { task ->
-    if (task.name == 'assembleRelease') {
-        if (System.getenv('USERDOMAIN') == "PC-PC") {
-            task.finalizedBy 'AutoTestRig'
-            AutoTestRig.outputs.upToDateWhen { false }
-        }
-    }
-}
-
-task AutoTestRig() << {
-    AutoInstall.execute()
-}
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     wearApp project(':wear')
@@ -153,7 +138,6 @@ dependencies {
         transitive = true;
     }
     compile(name: 'colorpicker', ext: 'aar')
-
     def supportVersion = '25.3.1'
     def playServicesVersion = '11.0.2'
     compile "com.android.support:appcompat-v7:$supportVersion"

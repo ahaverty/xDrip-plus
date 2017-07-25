@@ -220,7 +220,7 @@
     <string name="dexcom_transmitter_id">Dexcom Transmitter ID</string>
     <string name="run_collector_in_foreground">Run Collector in foreground</string>
     <string name="shows_a_persistent_notification">Shows a persistent notification graph, visible on lock-screen and prevents android killing the service.</string>
-    <string name="list_of_receivers">List of recievers</string>
+    <string name="list_of_receivers">List of receivers</string>
     <string name="extra_tags_for_logging">Extra tags for logging</string>
     <string name="extra_tags_dialog_message">The tags entered here will be logged into xDrip. Format is tag:level. Level can be v,d,i. For example bgreading:i,DexCollectionService:v. This tags will be logged with low priority to Error and event list.</string>
     <string name="extra_tags_dialog_title">Enter more tags to be logged</string>
@@ -778,7 +778,7 @@
     <string name="predictive_simulations">Predictive Simulations</string>
     <string name="low_prediction_values">Low level prediction values</string>
     <string name="target_glucose_default">Target Glucose Default</string>
-    <string name="default_liver_maximum_impact">Default Liver Maximum Impact (0-1)</string>
+    <string name="default_liver_maximum_impact">Default Liver Maximum Impact (0–1)</string>
     <string name="remote_snoozes">Sending and receiving remote snoozes</string>
     <string name="remote_snoozing">Remote Snoozing</string>
     <string name="snoozes_will_silence_all">Snoozes will silence all handsets in group with the accept setting below enabled on them</string>

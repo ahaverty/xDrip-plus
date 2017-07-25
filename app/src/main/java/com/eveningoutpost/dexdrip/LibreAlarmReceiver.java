@@ -137,8 +137,7 @@ public class LibreAlarmReceiver extends BroadcastReceiver {
                                     processReadingDataTransferObject(object);
                                 } catch (Exception e) {
                                     Log.wtf(TAG, "Could not process data structure from LibreAlarm: " + e.toString());
-                                    JoH.static_toast_long("LibreAlarm data format appears incompatible!? protocol changed?");
-
+                                    JoH.static_toast_short("Failed to process sensor data.");
                                 }
                                 break;
 
@@ -194,8 +193,8 @@ public class LibreAlarmReceiver extends BroadcastReceiver {
         if ((mHistory != null) && (mHistory.size() > 1)) {
             Collections.sort(mHistory);
 
-            final List<Double> polyxList = new ArrayList<Double>();
-            final List<Double> polyyList = new ArrayList<Double>();
+            final List<Double> polyxList = new ArrayList<>();
+            final List<Double> polyyList = new ArrayList<>();
             for (GlucoseData gd : mHistory) {
                 if (d)
                     Log.d(TAG, "history : " + JoH.dateTimeText(gd.realDate) + " " + gd.glucose(true));

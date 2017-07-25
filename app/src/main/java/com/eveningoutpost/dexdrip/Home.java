@@ -33,6 +33,7 @@ import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -243,6 +244,7 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
     private static String statusBWP = "";
     private double mRecommendedCarbs;
     private double mRecommendedInsulin;
+    private FloatingActionButton addTreatmentFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -374,14 +376,29 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
 
             @Override
             public void onClick(View v) {
-                promptTextInput();
-
+                startAddTreatmentDialog(v);
             }
         });
         btnSpeak.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 promptSpeechInput();
+                return true;
+            }
+        });
+
+
+        this.addTreatmentFab = (FloatingActionButton) findViewById(R.id.add_treatment_fab);
+        addTreatmentFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAddTreatmentDialog(v);
+            }
+        });
+        addTreatmentFab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SnoozeActivity.class));
                 return true;
             }
         });
@@ -2220,7 +2237,7 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
                 } else if (isLimitter) {
                     dexbridgeBattery.setText(getString(R.string.limitter_battery) + ": " + bridgeBattery + "%");
                 } else {
-                    dexbridgeBattery.setText("Bridge battery" + ": " + bridgeBattery + ((bridgeBattery < 200) ? "%" : "mV"));
+                    dexbridgeBattery.setText("Watch Battery" + ": " + bridgeBattery + ((bridgeBattery < 200) ? "%" : "mV"));
                 }
             }
             if (bridgeBattery < 50) dexbridgeBattery.setTextColor(Color.YELLOW);
@@ -2789,6 +2806,14 @@ public class Home extends ActivityWithMenu implements AddTreatment.OnAddTreatmen
 
     @SuppressWarnings("UnnecessaryBoxing")
     public void startAddTreatmentDialog(MenuItem item) {
+        Double roundedCarbs = Double.valueOf(Math.round(mRecommendedCarbs));
+        Double roundedInsulin = Double.valueOf((Math.round(mRecommendedInsulin * 10) / 10)); //Allow decimal place for insulin
+        AddTreatment addTreatmentDialog = AddTreatment.newInstance(null, roundedCarbs, roundedInsulin);
+        addTreatmentDialog.show(getSupportFragmentManager(), "AddTreatmentDialog");
+    }
+
+    @SuppressWarnings("UnnecessaryBoxing")
+    public void startAddTreatmentDialog(View myitem) {
         Double roundedCarbs = Double.valueOf(Math.round(mRecommendedCarbs));
         Double roundedInsulin = Double.valueOf((Math.round(mRecommendedInsulin * 10) / 10)); //Allow decimal place for insulin
         AddTreatment addTreatmentDialog = AddTreatment.newInstance(null, roundedCarbs, roundedInsulin);
